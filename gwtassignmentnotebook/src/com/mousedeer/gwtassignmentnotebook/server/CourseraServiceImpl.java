@@ -38,6 +38,11 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 		CourseraService {
 
 	private String cookieString = "";
+	
+	/*
+	 * Set to true if testing offline - will generate dummy courses
+	 */
+	private boolean testingOffline = false;
 
 	/*
 	 * Types of assignments to fetch - must be exact capitalization used in
@@ -57,6 +62,14 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 	 */
 	public List<CourseEnrollment> getCourses(String name, String pass)
 			throws Exception {
+		
+		//testing offline - use dummy data
+		if (testingOffline)
+		{
+			return generateDummyCourses();
+			
+		}
+		
 		// Verify that the input is valid.
 		if (!FieldVerifier.isValidText(name)
 				|| !FieldVerifier.isValidText(pass)) {
@@ -170,15 +183,16 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 		list = (ArrayList<HashMap<String, Object>>) gson.fromJson(new String(
 				resp.getContent()), list.getClass());
 		ArrayList<String> urlList = new ArrayList<String>();
-		String testRetString = "";
 		for (HashMap<String, Object> i : list) {
-			Double courseId = (Double) i.get("id");
+			String courseName = i.get("name").toString();
+			String courseImageUrl = i.get("photo").toString();
+			//Double courseId = (Double) i.get("id");
 			ArrayList<HashMap<String, Object>> enrollmentDetails = (ArrayList<HashMap<String, Object>>) i
 					.get("courses");
 			for (HashMap<String, Object> enrollment : enrollmentDetails) {
 				boolean active = (boolean) enrollment.get("active");
 
-				Double enrollId = (Double) enrollment.get("id");
+				//Double enrollId = (Double) enrollment.get("id");
 				String homeUrl = (String) enrollment.get("home_link");
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String endDateStr = (String) enrollment.get("end_date");
@@ -187,20 +201,15 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 					endDate = sdf.parse((String) enrollment.get("end_date"));
 				}
 				Date today = new Date();
-				Double status = (Double) enrollment.get("status");
+				//Double status = (Double) enrollment.get("status");
 
 				if (active && endDate.after(today)) {
 					CourseEnrollment ce = new CourseEnrollment();
 					urlList.add(homeUrl);
 					ce.setHomeLink(homeUrl);
-					testRetString += "\n" + courseId + " " + enrollId + " "
-							+ active + " ";
-					testRetString += status + " " + sdf.format(endDate) + " "
-							+ homeUrl + "\n";
-					/*
-					 * getQuizzes(ce, AssignType.quiz.toString());
-					 * getQuizzes(ce, AssignType.assignment.toString());
-					 */
+					ce.setName(courseName);
+					ce.setImageUrl(courseImageUrl);
+					
 
 					enrollmentsList.add(ce);
 				}
@@ -219,6 +228,11 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 	 */
 	public CourseEnrollment getAssignments(CourseEnrollment course)
 			throws Exception {
+		//if testing, skip this - assignments will be set up in dummy course
+		if (testingOffline)
+		{
+			return course;
+		}
 		getQuizzes(course, AssignType.quiz.toString());
 		getQuizzes(course, AssignType.assignment.toString());
 		return course;
@@ -279,8 +293,6 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 
 						break;
 					case "a":
-						String a = xpp.getAttributeValue(null, "class");
-						String b = a;
 						if (xpp.getAttributeValue(null, "class") != null
 								&& xpp.getAttributeValue(null, "class")
 										.equalsIgnoreCase("btn btn-primary"))
@@ -349,4 +361,21 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 		return resp;
 	}
 
+	//for testing - return a list of fake courses
+	private List<CourseEnrollment> generateDummyCourses()
+	  {
+		  Quiz assignment = new Quiz();
+		  assignment.setAssignmentName("Test");
+		  assignment.setAssignmentUrl("http://google.com");
+		  CourseEnrollment ce = new CourseEnrollment();
+
+		  CourseEnrollment ce2 = new CourseEnrollment();
+		  ce.addAssignment(assignment);
+		  ce2.addAssignment(assignment);
+		  ArrayList<CourseEnrollment> courses = new ArrayList<CourseEnrollment>();
+		  courses.add(ce);
+		  courses.add(ce2);
+		  return courses;
+		  
+	  }
 }

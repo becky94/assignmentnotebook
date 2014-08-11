@@ -7,13 +7,17 @@ import java.util.List;
 
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
@@ -24,8 +28,10 @@ public class CourseDetailPanel extends Composite {
 	
 	CellTable<Quiz> table;
 	Label courseNameLabel;
+	//VerticalPanel panel;
 	VerticalPanel panel;
 	Label loadingLabel;
+	Image courseImage;
 	ListDataProvider<Quiz> dataProvider;
 	CourseEnrollment course;
 	
@@ -34,14 +40,21 @@ public class CourseDetailPanel extends Composite {
 	{
 		this.course = course;
 		dataProvider = new ListDataProvider<Quiz>();
-		courseNameLabel = new Label(course.getHomeLink());
+		courseNameLabel = new Label(course.getName());
 		loadingLabel = new Label("Loading..");
 		table = generateTable(course.getAssignmentList());
+		courseImage = new Image(course.getImageUrl());
 		panel = new VerticalPanel();		
 		panel.add(courseNameLabel);
 		panel.add(table);
 		panel.add(loadingLabel);
 		
+	/*	panel = new DockLayoutPanel(Unit.EM);
+		panel.addNorth(courseNameLabel, 2);
+		panel.addSouth(loadingLabel, 2);
+		panel.addWest(courseImage, 10);
+		panel.add(table);
+		panel.setVisible(true);*/
 		if (loading)
 		{
 			loadingLabel.setVisible(true);
@@ -86,17 +99,6 @@ public class CourseDetailPanel extends Composite {
 
 		    // Create name column.
 		 	
-		 /*   TextColumn<Quiz> nameColumn = new TextColumn<Quiz>() {
-		      @Override
-		      public String getValue(Quiz quiz) {
-		    	  if (quiz.getAssignmentName() != null && quiz.getAssignmentUrl() !=null)
-		    	  {
-		    		  return "<a href="+quiz.getAssignmentUrl()+">" + quiz.getAssignmentName() + "</a>";
-		    	  }
-		    	  else if (quiz.getAssignmentName() != null)  return quiz.getAssignmentName().toString();
-		    	  else return "N/A";
-		      }
-		    };*/
 		    
 		    Column<Quiz, SafeHtml> nameColumn = 
 		    	    new Column<Quiz, SafeHtml>(new SafeHtmlCell()) { 
@@ -120,16 +122,6 @@ public class CourseDetailPanel extends Composite {
 		    // Make the name column sortable.
 		    nameColumn.setSortable(true);
 
-		 // Create due date column.
-		  /*  TextColumn<Quiz> dueDateColumn = new TextColumn<Quiz>() {
-		      @Override
-		      public String getValue(Quiz quiz) {
-		    	  if (quiz.getDueDate() != null)  return quiz.getDueDate().toString();
-		    	  else return "N/A";
-		      }
-		      
-		      
-		    };*/
 		    Column<Quiz, Date> dueDateColumn = 
 		    	    new Column<Quiz, Date>(new DateCell()) { 
 		    	      @Override 

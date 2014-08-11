@@ -3,6 +3,7 @@ package com.mousedeer.gwtassignmentnotebook.shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class CourseEnrollment implements Serializable {
@@ -21,8 +22,34 @@ public class CourseEnrollment implements Serializable {
 	private ArrayList<Quiz> assignmentList = new ArrayList<Quiz>();
 	private int sessionId;
 	private int courseId;
+	private String name;
+	private String imageUrl;
 	
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public int getSessionId() {
+		return sessionId;
+	}
+
+	public int getCourseId() {
+		return courseId;
+	}
+
 	public ArrayList<Quiz> getAssignmentList() {
 		return assignmentList;
 	}
@@ -74,18 +101,7 @@ public class CourseEnrollment implements Serializable {
 		this.courseId = courseId;
 	}
 
-	public CourseEnrollment(int enrollmentId, int sessionId,
-			int courseId, boolean isSigTrack, Date startDate, Date endDate,
-			String startStatus) {
-		super();
-		this.id = enrollmentId;
-		this.sessionId = sessionId;
-		this.courseId = courseId;
-		this.isSigTrack = isSigTrack;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.startStatus = startStatus;
-	}
+
 
 	public String getStartStatus() {
 		return startStatus;
@@ -119,5 +135,19 @@ public class CourseEnrollment implements Serializable {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+	
+	public List<Quiz> getAssignmentsDueThisWeek()
+	{
+		ArrayList<Quiz> list = new ArrayList<Quiz>();
+		for (Quiz assignment : assignmentList)
+		{
+			if (assignment.isDueThisWeek())
+			{
+				list.add(assignment);
+			}
+		}
+		return list;
+	}
+	
 
 }

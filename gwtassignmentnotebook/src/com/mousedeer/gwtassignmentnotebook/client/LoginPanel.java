@@ -38,7 +38,8 @@ public class LoginPanel extends Composite {
 		loadingLabel = new Label("Loading..");
 		
 		//set text
-		nameText.setText("Email");
+		nameText.getElement().setPropertyString("placeholder", "Email");
+		passText.getElement().setPropertyString("placeholder", "Password");
 		loginLabel.setText("Log in to Coursera");
 		loginButton.setText("Login");
 		
@@ -50,7 +51,12 @@ public class LoginPanel extends Composite {
 		loginPanel.add(errorLabel);
 		panel.add(loginPanel);
 		
+
+		nameText.setFocus(true);
+	  	nameText.selectAll();
+	  	
 		initWidget(panel);
+		
 	}
 
 

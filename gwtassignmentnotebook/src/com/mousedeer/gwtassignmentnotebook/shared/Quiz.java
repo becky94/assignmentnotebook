@@ -191,4 +191,11 @@ public class Quiz implements Serializable {
 		
 		//return null;
 	}
+	public boolean isDueThisWeek() {
+		if (dueDate.compareTo(new Date()) > 7)
+		{
+			return true;
+		}
+		return false;
+	}
 }

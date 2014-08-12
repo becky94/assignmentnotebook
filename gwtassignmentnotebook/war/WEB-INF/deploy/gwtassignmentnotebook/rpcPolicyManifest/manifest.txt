@@ -1,2 +1,3 @@
 # Module gwtassignmentnotebook
 # RPC service class, partial path of RPC policy file
+com.mousedeer.gwtassignmentnotebook.client.CourseraService, D839251B09D0F752345BDD11617C07ED.gwt.rpc

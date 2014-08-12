@@ -367,8 +367,9 @@ public class CourseraServiceImpl extends RemoteServiceServlet implements
 		  Quiz assignment = new Quiz();
 		  assignment.setAssignmentName("Test");
 		  assignment.setAssignmentUrl("http://google.com");
+		  
 		  CourseEnrollment ce = new CourseEnrollment();
-
+		  ce.setImageUrl("http://static01.nyt.com/images/2014/08/12/nyregion/DNCsubweb2/DNCsubweb2-thumbStandard.jpg");
 		  CourseEnrollment ce2 = new CourseEnrollment();
 		  ce.addAssignment(assignment);
 		  ce2.addAssignment(assignment);

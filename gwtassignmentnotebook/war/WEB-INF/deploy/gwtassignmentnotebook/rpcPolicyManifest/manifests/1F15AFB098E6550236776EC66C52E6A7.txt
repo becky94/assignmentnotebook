@@ -1,2 +1,0 @@
-serviceClass: com.mousedeer.gwtassignmentnotebook.client.CourseraService
-path: 3FC36E24281E51E3DBE8F525F1E8DC2E.gwt.rpc

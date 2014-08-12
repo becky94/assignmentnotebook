@@ -17,8 +17,11 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.mousedeer.gwtassignmentnotebook.shared.CourseEnrollment;
@@ -30,10 +33,13 @@ public class CourseDetailPanel extends Composite {
 	Label courseNameLabel;
 	//VerticalPanel panel;
 	VerticalPanel panel;
+	HorizontalPanel horizPanel;
 	Label loadingLabel;
 	Image courseImage;
 	ListDataProvider<Quiz> dataProvider;
-	CourseEnrollment course;
+	CourseEnrollment course;  
+	int imageWidth = 200;
+	int imageHeight = 200;
 	
 	//create a course detail panel for course
 	public CourseDetailPanel(CourseEnrollment course, boolean loading)
@@ -41,13 +47,29 @@ public class CourseDetailPanel extends Composite {
 		this.course = course;
 		dataProvider = new ListDataProvider<Quiz>();
 		courseNameLabel = new Label(course.getName());
+		courseNameLabel.setStyleName("courseTitle");
 		loadingLabel = new Label("Loading..");
+		loadingLabel.setStyleName("loadingLabel");
 		table = generateTable(course.getAssignmentList());
-		courseImage = new Image(course.getImageUrl());
-		panel = new VerticalPanel();		
+
+		horizPanel = new HorizontalPanel();
+		VerticalPanel imagePanel = new VerticalPanel();
+		if (course.getImageUrl() != null)
+		{
+			courseImage = new Image(course.getImageUrl());
+			courseImage.setPixelSize(imageWidth, imageHeight);
+			imagePanel.setStyleName("courseImage");
+			courseImage.setStyleName("courseImage");
+			imagePanel.add(courseImage);
+			
+
+			horizPanel.add(courseImage);
+		}
+		panel = new VerticalPanel();	
 		panel.add(courseNameLabel);
 		panel.add(table);
 		panel.add(loadingLabel);
+		horizPanel.add(panel);
 		
 	/*	panel = new DockLayoutPanel(Unit.EM);
 		panel.addNorth(courseNameLabel, 2);
@@ -66,7 +88,8 @@ public class CourseDetailPanel extends Composite {
 			refreshTable(course);
 		}				
 		
-		initWidget(panel);
+		horizPanel.setStyleName("coursedetail");
+		initWidget(horizPanel);
 	}
 
 	public void refreshTable(CourseEnrollment course)

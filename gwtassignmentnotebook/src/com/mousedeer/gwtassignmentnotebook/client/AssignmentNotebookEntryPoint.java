@@ -93,7 +93,7 @@ public class AssignmentNotebookEntryPoint implements EntryPoint {
 				//set up the course container
 			//	final Panel coursesContainer = RootPanel
 				//		.get("coursesContainer");
-				final Panel coursesContainer = RootPanel.get();
+				final Panel coursesContainer = RootPanel.get("coursesContainer");
 				coursesContainer.clear();
 
 				//hide login details
@@ -101,6 +101,7 @@ public class AssignmentNotebookEntryPoint implements EntryPoint {
 				
 				//set up "loading.." dialog box
 				dialogBox.setText("Loading..");
+				dialogBox.setModal(false);
 				dialogBox.show();
 
 				//get the course details from the Coursera site
